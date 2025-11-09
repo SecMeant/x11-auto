@@ -10,6 +10,8 @@
 # - If only primary display was present: position new display ABOVE primary
 # - If other displays exist: position new display to the RIGHT of rightmost non-primary display
 
+set -eu
+
 # Export display for X11 operations
 export DISPLAY=:0
 export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
