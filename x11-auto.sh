@@ -41,7 +41,7 @@ get_non_primary_displays() {
 get_rightmost_non_primary() {
     local rightmost=""
     local max_x=0
-    
+
     while IFS= read -r display; do
         # Get the position of the display (x+y format)
         local pos=$(xrandr --query | grep "^$display" | grep -oP '\d+x\d+\+\d+\+\d+' | head -1)
@@ -50,59 +50,59 @@ get_rightmost_non_primary() {
             local width=$(echo "$pos" | cut -d'x' -f1)
             local x_pos=$(echo "$pos" | cut -d'+' -f2)
             local right_edge=$((x_pos + width))
-            
+
             if [[ $right_edge -gt $max_x ]]; then
                 max_x=$right_edge
                 rightmost="$display"
             fi
         fi
     done < <(get_non_primary_displays)
-    
+
     echo "$rightmost"
 }
 
 # Main logic
 main() {
     log "=== Display connection detected ==="
-    
+
     # Log hotplug device information if available
     if [[ -n "$HOTPLUG_KERNEL_NAME" ]]; then
         log "Hotplug device: $HOTPLUG_KERNEL_NAME"
         log "Device name: $HOTPLUG_DEV_NAME"
         log "Device path: $HOTPLUG_DEV_PATH"
     fi
-    
+
     # Get current display information
     local primary=$(get_primary_display)
     local all_displays=($(get_connected_displays))
     local non_primary=($(get_non_primary_displays))
-    
+
     log "Primary display: $primary"
     log "All connected displays: ${all_displays[*]}"
     log "Non-primary displays: ${non_primary[*]}"
-    
+
     if [[ -z "$primary" ]]; then
         log "ERROR: Could not detect primary display"
         return 1
     fi
-    
+
     # Count non-primary displays
     local num_non_primary=${#non_primary[@]}
-    
+
     if [[ $num_non_primary -eq 0 ]]; then
         log "No non-primary displays connected, nothing to do"
         return 0
     fi
-    
+
     if [[ $num_non_primary -eq 1 ]]; then
         # Only one non-primary display - this is the newly connected one
         # Position it ABOVE the primary display
         local new_display="${non_primary[0]}"
         log "Only one non-primary display detected: $new_display"
         log "Positioning $new_display ABOVE $primary"
-        
+
         xrandr --output "$new_display" --auto --above "$primary"
-        
+
         if [[ $? -eq 0 ]]; then
             log "SUCCESS: Positioned $new_display above $primary"
         else
@@ -113,10 +113,10 @@ main() {
         # Multiple non-primary displays exist
         # Find the newest one (the one that's not yet positioned or has default position)
         # We'll assume the last one in the list that doesn't have a proper position is new
-        
+
         local positioned_displays=()
         local unpositioned_display=""
-        
+
         for display in "${non_primary[@]}"; do
             # Check if display has a position set (not at 0+0 or not set)
             local pos=$(xrandr --query | grep "^$display" | grep -oP '\d+x\d+\+\d+\+\d+' | head -1)
@@ -126,28 +126,28 @@ main() {
                 unpositioned_display="$display"
             fi
         done
-        
+
         # If we couldn't identify by position, assume the last one is new
         if [[ -z "$unpositioned_display" ]]; then
             unpositioned_display="${non_primary[-1]}"
             positioned_displays=("${non_primary[@]:0:${#non_primary[@]}-1}")
         fi
-        
+
         log "Positioned displays: ${positioned_displays[*]}"
         log "New display to position: $unpositioned_display"
-        
+
         # Find the rightmost non-primary display (excluding the new one)
         local rightmost=$(get_rightmost_non_primary | grep -v "$unpositioned_display" | head -1)
-        
+
         # If still empty, use the first positioned display
         if [[ -z "$rightmost" ]] && [[ ${#positioned_displays[@]} -gt 0 ]]; then
             rightmost="${positioned_displays[0]}"
         fi
-        
+
         if [[ -n "$rightmost" ]]; then
             log "Positioning $unpositioned_display to the RIGHT of $rightmost"
             xrandr --output "$unpositioned_display" --auto --right-of "$rightmost"
-            
+
             if [[ $? -eq 0 ]]; then
                 log "SUCCESS: Positioned $unpositioned_display to the right of $rightmost"
             else
