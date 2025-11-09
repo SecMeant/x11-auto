@@ -1,0 +1,5 @@
+# Generated files from templates (*.in files)
+# These are created during installation by install.sh
+99-monitor-hotplug.rules
+x11-auto.udev.sh
+

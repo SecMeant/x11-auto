@@ -4,5 +4,6 @@
 # This rule triggers when a display is connected via DisplayPort, HDMI, or VGA
 
 # Trigger on DRM (Direct Rendering Manager) change events
-ACTION=="change", SUBSYSTEM=="drm", RUN+="/home/holz/etc/x11-auto/x11-auto.udev.sh '%k' '$env{DEVNAME}' '$env{DEVPATH}'"
+ACTION=="change", SUBSYSTEM=="drm", RUN+="@SCRIPT_DIR@/x11-auto.udev.sh '%k' '$env{DEVNAME}' '$env{DEVPATH}'"
+
 
