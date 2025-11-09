@@ -12,6 +12,8 @@
 #   $2 - device name (e.g., /dev/dri/card0)
 #   $3 - device path in sysfs
 
+set -eu
+
 KERNEL_NAME="$1"
 DEV_NAME="$2"
 DEV_PATH="$3"
