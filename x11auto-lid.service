@@ -1,0 +1,27 @@
+[Unit]
+Description=X11 Laptop Lid Event Monitor
+Documentation=man:systemd.service(5)
+After=graphical.target
+Wants=graphical.target
+
+[Service]
+Type=simple
+# Run as root (required for libinput)
+User=root
+Group=root
+# Use wrapper script that auto-detects X session
+ExecStart=/home/holz/etc/git/x11-auto/x11auto-lid-wrapper.sh
+Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+# Allow access to X11 and input devices
+SupplementaryGroups=input
+NoNewPrivileges=false
+ProtectHome=false
+ProtectSystem=false
+
+[Install]
+WantedBy=graphical.target
+

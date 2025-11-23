@@ -21,9 +21,14 @@ sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/x11-auto.udev.sh.in" > "$SCRIPT_
 # Configure 99-monitor-hotplug.rules
 sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/99-monitor-hotplug.rules.in" > "$SCRIPT_DIR/99-monitor-hotplug.rules"
 
+# Configure x11auto-lid.service
+sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/x11auto-lid.service.in" > "$SCRIPT_DIR/x11auto-lid.service"
+
 # Make scripts executable
 chmod +x "$SCRIPT_DIR/x11-auto.sh"
 chmod +x "$SCRIPT_DIR/x11-auto.udev.sh"
+chmod +x "$SCRIPT_DIR/x11auto-lid.sh"
+chmod +x "$SCRIPT_DIR/x11auto-lid-wrapper.sh"
 
 # Install udev rule
 if [ -d /etc/udev/rules.d/ ]; then
@@ -37,8 +42,19 @@ fi
 udevadm control --reload-rules
 udevadm trigger
 
+# Install systemd service for lid monitoring
+if [ -d /etc/systemd/system/ ]; then
+    echo "Installing systemd service for lid monitoring..."
+    cp "$SCRIPT_DIR/x11auto-lid.service" /etc/systemd/system/
+    systemctl daemon-reload
+    systemctl enable --now x11auto-lid.service
+else
+    echo "Warning: systemd directory not found. Skipping service installation."
+fi
+
 echo "Installation complete!"
 echo
 echo "Scripts installed from: $SCRIPT_DIR"
 echo "Logs: /var/log/x11-auto.log"
+echo "Lid monitoring logs: /var/log/x11auto-lid.log"
 
