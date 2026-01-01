@@ -17,7 +17,7 @@ export DISPLAY=:0
 export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
 
 # Log file for debugging
-LOG_FILE="/var/log/x11-auto.log"
+LOG_FILE="/var/log/x11auto.log"
 
 # Function to log messages
 log() {

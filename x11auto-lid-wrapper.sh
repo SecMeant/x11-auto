@@ -17,7 +17,7 @@ find_x_session() {
     local xauth=""
     local xuser=""
     
-    # Find the user running X11 session (same logic as x11-auto.udev.sh)
+    # Find the user running X11 session (same logic as x11auto.udev.sh)
     xuser=$(who | grep -E "tty[0-9]+ .+\(:0\)" | awk '{print $1}' | head -1)
     
     # Alternative: check for users with DISPLAY :0

@@ -18,7 +18,7 @@ KERNEL_NAME="$1"
 DEV_NAME="$2"
 DEV_PATH="$3"
 
-LOG_FILE="/var/log/x11-auto.log"
+LOG_FILE="/var/log/x11auto.log"
 
 # Create log files with proper permissions (running as root via udev)
 touch "$LOG_FILE" 2>/dev/null || true
@@ -55,6 +55,6 @@ sudo -u "$X_USER" \
     HOTPLUG_KERNEL_NAME="$KERNEL_NAME" \
     HOTPLUG_DEV_NAME="$DEV_NAME" \
     HOTPLUG_DEV_PATH="$DEV_PATH" \
-    @SCRIPT_DIR@/x11-auto.sh >> "$LOG_FILE" 2>&1 &
+    @SCRIPT_DIR@/x11auto.sh >> "$LOG_FILE" 2>&1 &
 
 

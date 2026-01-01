@@ -15,8 +15,8 @@ fi
 # Configure template files by replacing @SCRIPT_DIR@ with actual path
 echo "Configuring scripts with installation directory: $SCRIPT_DIR"
 
-# Configure x11-auto.udev.sh
-sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/x11-auto.udev.sh.in" > "$SCRIPT_DIR/x11-auto.udev.sh"
+# Configure x11auto.udev.sh
+sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/x11auto.udev.sh.in" > "$SCRIPT_DIR/x11auto.udev.sh"
 
 # Configure 99-monitor-hotplug.rules
 sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/99-monitor-hotplug.rules.in" > "$SCRIPT_DIR/99-monitor-hotplug.rules"
@@ -25,8 +25,8 @@ sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/99-monitor-hotplug.rules.in" > "
 sed "s|@SCRIPT_DIR@|$SCRIPT_DIR|g" "$SCRIPT_DIR/x11auto-lid.service.in" > "$SCRIPT_DIR/x11auto-lid.service"
 
 # Make scripts executable
-chmod +x "$SCRIPT_DIR/x11-auto.sh"
-chmod +x "$SCRIPT_DIR/x11-auto.udev.sh"
+chmod +x "$SCRIPT_DIR/x11auto.sh"
+chmod +x "$SCRIPT_DIR/x11auto.udev.sh"
 chmod +x "$SCRIPT_DIR/x11auto-lid.sh"
 chmod +x "$SCRIPT_DIR/x11auto-lid-wrapper.sh"
 
@@ -55,6 +55,6 @@ fi
 echo "Installation complete!"
 echo
 echo "Scripts installed from: $SCRIPT_DIR"
-echo "Logs: /var/log/x11-auto.log"
+echo "Logs: /var/log/x11auto.log"
 echo "Lid monitoring logs: /var/log/x11auto-lid.log"
 
